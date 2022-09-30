@@ -7,6 +7,8 @@ import medusa from "../lib/config";
 import Link from "next/link";
 import Date from "../components/date";
 
+import { CardProductLabel } from "../components/Home/Products/Card.styled";
+
 interface HomeProps {
   products: Product[];
   totalCount: Boolean;
@@ -21,7 +23,7 @@ const HomeGrid = styled.div`
 const ProductItem = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0rem;
   height: 100%;
   justify-content: center;
   align-items: center;
@@ -31,10 +33,6 @@ const ProductItem = styled.div`
 const ProductImage = styled.img`
   max-width: 100%;
   display: block;
-`;
-
-const ProductLabel = styled.span`
-  font-size: 1rem;
 `;
 
 export default function Home({ products, totalCount }: HomeProps) {
@@ -51,9 +49,9 @@ export default function Home({ products, totalCount }: HomeProps) {
         <HomeGrid>
           {products.map((product) => {
             return (
-              <ProductItem>
+              <ProductItem key={product.id}>
                 <ProductImage src={product.thumbnail} />
-                <ProductLabel>{product.title}</ProductLabel>
+                <CardProductLabel>{product.title}</CardProductLabel>
               </ProductItem>
             );
           })}
