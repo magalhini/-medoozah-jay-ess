@@ -1,17 +1,24 @@
 import Head from "next/head";
+import { GetServerSideProps } from "next";
 import { Product } from "@medusajs/medusa";
 import styled, { css } from "styled-components";
 import Layout, { siteTitle } from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
 import medusa from "../lib/config";
-import Link from "next/link";
-import Date from "../components/date";
 
-import { CardProductLabel } from "../components/Home/Products/Card.styled";
+import { extractStoreNameFromProduct } from "../lib/utils";
+
+import {
+  CardProductLabel,
+  ProductItem,
+  ProductImage,
+  CardProductPrice,
+  ProductLabelWrapper,
+} from "../components/Home/Products";
 
 interface HomeProps {
   products: Product[];
-  totalCount: Boolean;
+  totalCount: boolean;
 }
 
 const HomeGrid = styled.div`
@@ -20,23 +27,12 @@ const HomeGrid = styled.div`
   grid-gap: 1em;
 `;
 
-const ProductItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0rem;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-`;
-
-const ProductImage = styled.img`
-  max-width: 100%;
-  display: block;
+const HomeLink = styled.a`
+  text-decoration: none;
 `;
 
 export default function Home({ products, totalCount }: HomeProps) {
-  console.log(products);
+  // console.log(products);
   return (
     <Layout home>
       <Head>
@@ -49,10 +45,17 @@ export default function Home({ products, totalCount }: HomeProps) {
         <HomeGrid>
           {products.map((product) => {
             return (
-              <ProductItem key={product.id}>
-                <ProductImage src={product.thumbnail} />
-                <CardProductLabel>{product.title}</CardProductLabel>
-              </ProductItem>
+              <a key={product.id} href={`/products/${product.id}`}>
+                <ProductItem>
+                  <ProductImage src={product.thumbnail} />
+                  <ProductLabelWrapper>
+                    <CardProductLabel>
+                      {extractStoreNameFromProduct(product.title)}
+                    </CardProductLabel>
+                    <CardProductPrice>$25</CardProductPrice>
+                  </ProductLabelWrapper>
+                </ProductItem>
+              </a>
             );
           })}
         </HomeGrid>
@@ -65,7 +68,7 @@ export default function Home({ products, totalCount }: HomeProps) {
   );
 }
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const products = await medusa.products
     .list()
     .then(({ products, count }) => ({ products, count }));
@@ -75,4 +78,4 @@ export async function getServerSideProps() {
       totalCount: products.count,
     },
   };
-}
+};
