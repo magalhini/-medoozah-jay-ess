@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { Product } from "@medusajs/medusa";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Layout, { siteTitle } from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
 import medusa from "../lib/config";
@@ -21,7 +21,7 @@ interface HomeProps {
   totalCount: boolean;
 }
 
-const HomeGrid = styled.div`
+const HomeGrid = styled.main`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 1em;
@@ -32,7 +32,6 @@ const HomeLink = styled.a`
 `;
 
 export default function Home({ products, totalCount }: HomeProps) {
-  // console.log(products);
   return (
     <Layout home>
       <Head>
