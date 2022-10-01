@@ -1,7 +1,16 @@
 import Head from "next/head";
+import { useState } from "react";
 import { GetServerSideProps } from "next";
 import { Button } from "../../components/shared/Button";
+import { Dropdown, StyledDropdown } from "../../components/shared/Dropdown";
 import Layout from "../../components/layout";
+import {
+  ProductImage,
+  ProductImageWrapper,
+  Details,
+  Title,
+  Description,
+} from "../../components/Product/Details.styled";
 import { Product } from "@medusajs/medusa";
 import styled from "styled-components";
 import medusa from "../../lib/config";
@@ -16,22 +25,19 @@ const ProductPageGrid = styled.main`
   grid-gap: 3em;
 `;
 
-const ProductImageWrapper = styled.div``;
-const ProductImage = styled.img``;
-const Details = styled.div``;
-
-const Title = styled.h2`
-  font-size: ${({ theme }) => theme.fontSizes.l};
-`;
-
-const Description = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.s};
-  padding-top: ${({ theme }) => theme.spacing.m};
-  padding-bottom: ${({ theme }) => theme.spacing.m};
-`;
-
 export default function ProductPage({ product }: ProductPageProps) {
-  console.log(product);
+  const [selectedVariant, setSelectedVariant] = useState("");
+  const { variants } = product;
+
+  const variantOptions = variants.map((variant) => {
+    return {
+      label: variant.title,
+      value: variant.id,
+    };
+  });
+
+  console.log(variantOptions);
+
   return (
     <Layout home={false}>
       <Head>
@@ -44,11 +50,21 @@ export default function ProductPage({ product }: ProductPageProps) {
         <Details>
           <Title>{product.title}</Title>
           <Description>{product.description}</Description>
-          <p>drop down</p>
+          <StyledDropdown
+            onHandleChange={(event) => setSelectedVariant(event.target.value)}
+            value={selectedVariant || variantOptions[0].value}
+            options={variantOptions}
+          />
           <p>drop down</p>
           <p>quantity</p>
 
-          <Button fullWidth onHandleClick={() => {}} primary>
+          <Button
+            fullWidth
+            onClick={(event) => {
+              console.log(event);
+            }}
+            primary
+          >
             Add to cart
           </Button>
         </Details>

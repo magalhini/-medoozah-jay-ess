@@ -8,7 +8,7 @@ type ButtonProps = {
   secondary?: boolean;
   fullWidth?: boolean;
   icon?: ButtonIcons;
-  onHandleClick(): void;
+  onClick(): void;
 };
 
 export const Button = styled.button<ButtonProps>`
