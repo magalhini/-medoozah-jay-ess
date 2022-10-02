@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 type ButtonIcons = "plus" | "cross";
 
@@ -8,6 +8,7 @@ type ButtonProps = {
   secondary?: boolean;
   fullWidth?: boolean;
   icon?: ButtonIcons;
+  disabled?: boolean;
   onClick(): void;
 };
 
@@ -23,9 +24,17 @@ export const Button = styled.button<ButtonProps>`
   font-size: ${({ theme }) => theme.fontSizes.xs};
   transition: background-color 0.1s ease-in-out;
 
+  :disabled {
+    opacity: 0.4;
+  }
+
+  ${(props: ButtonProps) =>
+    props.fullWidth &&
+    css`
+      width: 100%;
+    `}
+
   &:hover {
     background-color: ${({ theme }) => theme.colors.medium};
   }
-
-  ${(props) => props.fullWidth && `width: 100%`}
 `;

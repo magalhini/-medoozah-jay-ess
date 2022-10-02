@@ -4,9 +4,12 @@ import Head from "next/head";
 import { Product } from "@medusajs/medusa";
 import { useState } from "react";
 import { GetServerSideProps } from "next";
-import { Button } from "../../components/shared/Button";
-import { Dropdown } from "../../components/shared/Dropdown";
-import { NumericInput } from "../../components/shared/NumericInput";
+import {
+  Button,
+  Dropdown,
+  NumericInput,
+  Spacing,
+} from "../../components/shared";
 import Layout from "../../components/layout";
 import {
   ProductImage,
@@ -34,6 +37,8 @@ export default function ProductPage({ product }: ProductPageProps) {
   const { variants, options } = product;
   const [selectedVariant, setSelectedVariant] = useState(variants[0].id);
   const [amount, setAmount] = useState(0);
+
+  console.log(amount);
 
   // const variantTypes = options.map((variant) => ({
   //   label: variant.title,
@@ -70,13 +75,21 @@ export default function ProductPage({ product }: ProductPageProps) {
           <Price>{formatCurrency(productDetails.prices[0].amount)}</Price>
           <Description>{product.description}</Description>
           <OptionLabel>Options:</OptionLabel>
-          <Dropdown
-            onHandleChange={(event) => setSelectedVariant(event.target.value)}
-            value={selectedVariant || variantOptions[0].value}
-            options={variantOptions}
-          />
-          <NumericInput onChange={setAmount} value={amount} />
+
+          <Spacing bottom="m">
+            <Dropdown
+              onHandleChange={(event) => setSelectedVariant(event.target.value)}
+              value={selectedVariant || variantOptions[0].value}
+              options={variantOptions}
+            />
+          </Spacing>
+
+          <OptionLabel>Amount:</OptionLabel>
+          <Spacing bottom="m">
+            <NumericInput onChange={setAmount} value={amount} />
+          </Spacing>
           <Button
+            disabled={amount == 0}
             fullWidth
             onClick={(event) => {
               console.log(event);

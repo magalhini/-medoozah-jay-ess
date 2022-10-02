@@ -58,10 +58,6 @@ export default function Home({ products, totalCount }: HomeProps) {
             );
           })}
         </HomeGrid>
-
-        {/* <Link href={`/posts/${id}`}>
-                <a>{title}</a>
-              </Link> */}
       </section>
     </Layout>
   );
