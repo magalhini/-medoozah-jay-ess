@@ -4,11 +4,17 @@ type Props = {
   value: string;
   onHandleChange(event: React.ChangeEvent<HTMLSelectElement>): void;
   options: any[];
+  readonly className: string;
 };
 
-export const Dropdown = ({ value, onHandleChange, options }: Props) => {
+const UnstyledDropdown = ({
+  className,
+  value,
+  onHandleChange,
+  options,
+}: Props) => {
   return (
-    <select value={value} onChange={onHandleChange}>
+    <select className={className} value={value} onChange={onHandleChange}>
       {options.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
@@ -18,6 +24,7 @@ export const Dropdown = ({ value, onHandleChange, options }: Props) => {
   );
 };
 
-export const StyledDropdown = styled(Dropdown)`
+export const Dropdown = styled(UnstyledDropdown)`
   width: 100%;
+  padding: 1rem;
 `;

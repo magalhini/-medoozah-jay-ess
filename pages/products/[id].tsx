@@ -1,8 +1,12 @@
+import { useCallback, useMemo } from "react";
+import styled from "styled-components";
 import Head from "next/head";
+import { Product } from "@medusajs/medusa";
 import { useState } from "react";
 import { GetServerSideProps } from "next";
 import { Button } from "../../components/shared/Button";
-import { Dropdown, StyledDropdown } from "../../components/shared/Dropdown";
+import { Dropdown } from "../../components/shared/Dropdown";
+import { NumericInput } from "../../components/shared/NumericInput";
 import Layout from "../../components/layout";
 import {
   ProductImage,
@@ -10,10 +14,11 @@ import {
   Details,
   Title,
   Description,
+  Price,
+  OptionLabel,
 } from "../../components/Product/Details.styled";
-import { Product } from "@medusajs/medusa";
-import styled from "styled-components";
 import medusa from "../../lib/config";
+import { formatCurrency } from "../../lib/utils";
 
 type ProductPageProps = {
   product: Product;
@@ -26,17 +31,30 @@ const ProductPageGrid = styled.main`
 `;
 
 export default function ProductPage({ product }: ProductPageProps) {
-  const [selectedVariant, setSelectedVariant] = useState("");
-  const { variants } = product;
+  const { variants, options } = product;
+  const [selectedVariant, setSelectedVariant] = useState(variants[0].id);
+  const [amount, setAmount] = useState(0);
 
-  const variantOptions = variants.map((variant) => {
-    return {
+  // const variantTypes = options.map((variant) => ({
+  //   label: variant.title,
+  //   values: variant.values,
+  // }));
+
+  const variantOptions = useMemo(() => {
+    return variants.map((variant) => ({
       label: variant.title,
       value: variant.id,
-    };
-  });
+    }));
+  }, [variants]);
 
+  console.log(product, "- product");
   console.log(variantOptions);
+
+  const productDetails = useMemo(() => {
+    return variants.find(({ id }) => id === selectedVariant);
+  }, [selectedVariant]);
+
+  console.log(productDetails);
 
   return (
     <Layout home={false}>
@@ -45,19 +63,19 @@ export default function ProductPage({ product }: ProductPageProps) {
       </Head>
       <ProductPageGrid>
         <ProductImageWrapper>
-          <ProductImage src={product.images[0].url} />
+          <ProductImage alt={product.title} src={product.images[0].url} />
         </ProductImageWrapper>
         <Details>
           <Title>{product.title}</Title>
+          <Price>{formatCurrency(productDetails.prices[0].amount)}</Price>
           <Description>{product.description}</Description>
-          <StyledDropdown
+          <OptionLabel>Options:</OptionLabel>
+          <Dropdown
             onHandleChange={(event) => setSelectedVariant(event.target.value)}
             value={selectedVariant || variantOptions[0].value}
             options={variantOptions}
           />
-          <p>drop down</p>
-          <p>quantity</p>
-
+          <NumericInput onChange={setAmount} value={amount} />
           <Button
             fullWidth
             onClick={(event) => {
