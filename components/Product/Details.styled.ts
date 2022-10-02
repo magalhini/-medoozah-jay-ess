@@ -7,6 +7,7 @@ export const Details = styled.div``;
 export const Title = styled.h2`
   font-size: ${({ theme }) => theme.fontSizes.l};
   margin-bottom: ${({ theme }) => theme.spacing.s};
+  margin-top: 0;
 `;
 
 export const Description = styled.p`

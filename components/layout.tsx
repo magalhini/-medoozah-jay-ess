@@ -1,20 +1,23 @@
 import Head from "next/head";
 import Image from "next/image";
+import styled from "styled-components";
 import styles from "./layout.module.css";
-import utilStyles from "../styles/utils.module.css";
-import Link from "next/link";
+import { Header } from "../components/Header";
+import { Spacing } from "../components/shared";
 
 export const siteTitle = "Medoozah Jay Ess's Store";
+
+const Link = styled.a`
+  margin: 3rem 0 0;
+  display: inline-block;
+`;
 
 export default function Layout({ children, home }) {
   return (
     <div className={styles.container}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="description"
-          content="Learn how to build a personal website using Next.js"
-        />
+        <meta name="description" content="Medoozah Jay Esse Storefront" />
         <meta
           property="og:image"
           content={`https://og-image.vercel.app/${encodeURI(
@@ -24,13 +27,16 @@ export default function Layout({ children, home }) {
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <header className={styles.header}>Header</header>
+      <Header>
+        <Image src="/images/medusa.png" width={75} height={75} />
+        <Spacing left="m">
+          <h1>Medoozah Jay Esse</h1>
+        </Spacing>
+      </Header>
       <main>{children}</main>
       {!home && (
         <div className={styles.backToHome}>
-          <Link href="/">
-            <a>← Back to home</a>
-          </Link>
+          <Link href="/">← Back to products</Link>
         </div>
       )}
     </div>

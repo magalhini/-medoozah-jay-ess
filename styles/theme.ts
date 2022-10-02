@@ -1,12 +1,19 @@
 import { DefaultTheme } from "styled-components";
 
-export const theme: DefaultTheme = {
+export type ThemeType = typeof theme;
+
+export const theme = {
   colors: {
     text: "rgb(9, 9, 9)",
     highlight: "#75F4F4",
     light: "#fff",
     accent: "#D999B9",
     medium: "rgb(80,80,80)",
+  },
+  breakpoints: {
+    small: "432px",
+    medium: "800px",
+    large: "850px",
   },
   spacing: {
     xs: "0.5rem",

@@ -1,64 +1,76 @@
 import Head from "next/head";
+import { useCallback } from "react";
 import { GetServerSideProps } from "next";
-import { Product } from "@medusajs/medusa";
+import { Product, ProductVariant } from "@medusajs/medusa";
 import styled from "styled-components";
 import Layout, { siteTitle } from "../components/layout";
-import utilStyles from "../styles/utils.module.css";
 import medusa from "../lib/config";
 
-import { extractStoreNameFromProduct } from "../lib/utils";
+import { extractStoreNameFromProduct, formatCurrency } from "../lib/utils";
 
 import {
   CardProductLabel,
+  CardProductPrice,
   ProductItem,
   ProductImage,
-  CardProductPrice,
+  ProductImageWrapper,
   ProductLabelWrapper,
+  ProductCardLink,
 } from "../components/Home/Products";
 
 interface HomeProps {
   products: Product[];
-  totalCount: boolean;
 }
 
-const HomeGrid = styled.main`
+const HomeGrid = styled.section`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-gap: 1em;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoints.small}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoints.medium}) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
-const HomeLink = styled.a`
-  text-decoration: none;
-`;
+export default function Home({ products }: HomeProps) {
+  const findLowestPrice = useCallback((product) => {
+    const prices = product.variants.map(
+      (item: ProductVariant) => item.prices[0].amount
+    );
+    return Math.min(...prices);
+  }, []);
 
-export default function Home({ products, totalCount }: HomeProps) {
   return (
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section className={utilStyles.headingMd}>headingMd</section>
-      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
 
-        <HomeGrid>
-          {products.map((product) => {
-            return (
-              <a key={product.id} href={`/products/${product.id}`}>
-                <ProductItem>
-                  <ProductImage src={product.thumbnail} />
-                  <ProductLabelWrapper>
-                    <CardProductLabel>
-                      {extractStoreNameFromProduct(product.title)}
-                    </CardProductLabel>
-                    <CardProductPrice>$25</CardProductPrice>
-                  </ProductLabelWrapper>
-                </ProductItem>
-              </a>
-            );
-          })}
-        </HomeGrid>
-      </section>
+      <HomeGrid>
+        {products.map((product) => {
+          return (
+            <ProductCardLink key={product.id} href={`/products/${product.id}`}>
+              <ProductItem>
+                <ProductImageWrapper>
+                  <ProductImage alt={product.title} src={product.thumbnail} />
+                </ProductImageWrapper>
+                <ProductLabelWrapper>
+                  <CardProductLabel>
+                    {extractStoreNameFromProduct(product.title)}
+                  </CardProductLabel>
+                  <CardProductPrice>
+                    {formatCurrency(findLowestPrice(product))}
+                  </CardProductPrice>
+                </ProductLabelWrapper>
+              </ProductItem>
+            </ProductCardLink>
+          );
+        })}
+      </HomeGrid>
     </Layout>
   );
 }

@@ -29,8 +29,12 @@ type ProductPageProps = {
 
 const ProductPageGrid = styled.main`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   grid-gap: 3em;
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoints.medium}) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 export default function ProductPage({ product }: ProductPageProps) {
@@ -38,17 +42,10 @@ export default function ProductPage({ product }: ProductPageProps) {
   const [selectedVariant, setSelectedVariant] = useState(variants[0].id);
   const [amount, setAmount] = useState(0);
 
-  console.log(amount);
-
-  // const variantTypes = options.map((variant) => ({
-  //   label: variant.title,
-  //   values: variant.values,
-  // }));
-
   const variantOptions = useMemo(() => {
-    return variants.map((variant) => ({
-      label: variant.title,
-      value: variant.id,
+    return variants.map(({ title, id }) => ({
+      label: title,
+      value: id,
     }));
   }, [variants]);
 
