@@ -18,8 +18,10 @@ import {
   ProductCardLink,
 } from "../components/Home/Products";
 
+import { Spacing } from "../components/shared";
 interface HomeProps {
   products: Product[];
+  collections: any; // no Collections type?
 }
 
 const HomeGrid = styled.section`
@@ -36,7 +38,8 @@ const HomeGrid = styled.section`
   }
 `;
 
-export default function Home({ products }: HomeProps) {
+export default function Home({ products, collections }: HomeProps) {
+  // Find lowest price in all variants to display "From: $"
   const findLowestPrice = useCallback((product) => {
     const prices = product.variants.map(
       (item: ProductVariant) => item.prices[0].amount
@@ -50,6 +53,7 @@ export default function Home({ products }: HomeProps) {
         <title>{siteTitle}</title>
       </Head>
 
+      <h2>Our Products</h2>
       <HomeGrid>
         {products.map((product) => {
           return (
@@ -71,6 +75,13 @@ export default function Home({ products }: HomeProps) {
           );
         })}
       </HomeGrid>
+
+      <Spacing top="xxl">
+        <h2>Collections</h2>
+        {collections.collections.length === 0 ? (
+          <p>We don't have any collections right now</p>
+        ) : null}
+      </Spacing>
     </Layout>
   );
 }
@@ -79,10 +90,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const products = await medusa.products
     .list()
     .then(({ products, count }) => ({ products, count }));
+
+  const collections = await medusa.collections
+    .list()
+    .then(({ collections }) => ({
+      collections,
+    }));
+
   return {
     props: {
       products: products.products,
-      totalCount: products.count,
+      collections,
     },
   };
 };

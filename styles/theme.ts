@@ -1,5 +1,3 @@
-import { DefaultTheme } from "styled-components";
-
 export type ThemeType = typeof theme;
 
 export const theme = {

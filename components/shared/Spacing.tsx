@@ -13,10 +13,9 @@ interface Props {
 
 export const Spacing = styled.div<Props>`
   margin-bottom: ${(props) =>
-    props.bottom ? props.theme.fontSizes[props.bottom] : 0};
-  margin-top: ${(props) => (props.top ? props.theme.fontSizes[props.top] : 0)};
-  margin-left: ${(props) =>
-    props.left ? props.theme.fontSizes[props.left] : 0};
+    props.bottom ? props.theme.spacing[props.bottom] : 0};
+  margin-top: ${(props) => (props.top ? props.theme.spacing[props.top] : 0)};
+  margin-left: ${(props) => (props.left ? props.theme.spacing[props.left] : 0)};
   margin-right: ${(props) =>
-    props.right ? props.theme.fontSizes[props.right] : 0};
+    props.right ? props.theme.spacing[props.right] : 0};
 `;
