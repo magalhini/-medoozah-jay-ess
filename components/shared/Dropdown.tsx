@@ -24,7 +24,7 @@ const UnstyledDropdown = ({
   );
 };
 
-export const Dropdown = styled(UnstyledDropdown)`
+export const Dropdown = styled(UnstyledDropdown)<Props>`
   width: 100%;
   padding: 1rem;
 `;

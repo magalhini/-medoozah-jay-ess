@@ -18,7 +18,7 @@ import {
   ProductCardLink,
 } from "../components/Home/Products";
 
-import { Spacing } from "../components/shared";
+import { Spacing, Heading } from "../components/shared";
 interface HomeProps {
   products: Product[];
   collections: any; // no Collections type?
@@ -47,37 +47,53 @@ export default function Home({ products, collections }: HomeProps) {
     return Math.min(...prices);
   }, []);
 
+  const totalProducts = products.length;
+
   return (
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
 
-      <h2>Our Products</h2>
+      <Heading>Our Products</Heading>
       <HomeGrid>
-        {products.map((product) => {
-          return (
-            <ProductCardLink key={product.id} href={`/products/${product.id}`}>
-              <ProductItem>
-                <ProductImageWrapper>
-                  <ProductImage alt={product.title} src={product.thumbnail} />
-                </ProductImageWrapper>
-                <ProductLabelWrapper>
-                  <CardProductLabel>
-                    {extractStoreNameFromProduct(product.title)}
-                  </CardProductLabel>
-                  <CardProductPrice>
-                    {formatCurrency(findLowestPrice(product))}
-                  </CardProductPrice>
-                </ProductLabelWrapper>
-              </ProductItem>
-            </ProductCardLink>
-          );
-        })}
+        {totalProducts > 0 &&
+          products.map((product) => {
+            return (
+              <ProductCardLink
+                key={product.id}
+                href={`/products/${product.id}`}
+              >
+                <ProductItem>
+                  <ProductImageWrapper>
+                    <ProductImage alt={product.title} src={product.thumbnail} />
+                  </ProductImageWrapper>
+                  <ProductLabelWrapper>
+                    <CardProductLabel>
+                      {extractStoreNameFromProduct(product.title)}
+                    </CardProductLabel>
+                    <CardProductPrice>
+                      {formatCurrency(findLowestPrice(product))}
+                    </CardProductPrice>
+                  </ProductLabelWrapper>
+                </ProductItem>
+              </ProductCardLink>
+            );
+          })}
+
+        {totalProducts === 0 && (
+          <>
+            <Heading>Check back later</Heading>
+            <p>
+              This is a bit embarassing, but we don't seem to have any products
+              right now.
+            </p>
+          </>
+        )}
       </HomeGrid>
 
       <Spacing top="xxl">
-        <h2>Collections</h2>
+        <Heading>Collections</Heading>
         {collections.collections.length === 0 ? (
           <p>We don't have any collections right now</p>
         ) : null}

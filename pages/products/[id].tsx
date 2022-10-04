@@ -21,7 +21,7 @@ import {
   OptionLabel,
 } from "../../components/Product/Details.styled";
 import medusa from "../../lib/config";
-import { formatCurrency } from "../../lib/utils";
+import { formatCurrency, filterUnique } from "../../lib/utils";
 
 type ProductPageProps = {
   product: Product;
@@ -40,7 +40,10 @@ const ProductPageGrid = styled.main`
 export default function ProductPage({ product }: ProductPageProps) {
   const { variants, options } = product;
   const [selectedVariant, setSelectedVariant] = useState(variants[0].id);
+  const [itemOptions, setItemOptions] = useState({});
   const [amount, setAmount] = useState(0);
+
+  console.log(product, "product");
 
   const variantOptions = useMemo(() => {
     return variants.map(({ title, id }) => ({
@@ -49,14 +52,9 @@ export default function ProductPage({ product }: ProductPageProps) {
     }));
   }, [variants]);
 
-  console.log(product, "- product");
-  console.log(variantOptions);
-
   const productDetails = useMemo(() => {
     return variants.find(({ id }) => id === selectedVariant);
   }, [selectedVariant]);
-
-  console.log(productDetails);
 
   return (
     <Layout home={false}>
@@ -71,16 +69,45 @@ export default function ProductPage({ product }: ProductPageProps) {
           <Title>{product.title}</Title>
           <Price>{formatCurrency(productDetails.prices[0].amount)}</Price>
           <Description>{product.description}</Description>
-          <OptionLabel>Options:</OptionLabel>
 
-          <Spacing bottom="m">
-            <Dropdown
-              onHandleChange={(event) => setSelectedVariant(event.target.value)}
-              value={selectedVariant || variantOptions[0].value}
-              options={variantOptions}
-            />
-          </Spacing>
+          {/* Below was my previous dropdown with all variant combinations in one, before I realized
+          they were meant to be split per Type this morning 🤦 */}
 
+          {/* {variants.length > 0 && (
+            <Spacing bottom="m">
+              <Dropdown
+                onHandleChange={(event) =>
+                  setSelectedVariant(event.target.value)
+                }
+                value={selectedVariant || variantOptions[0].value}
+                options={variantOptions}
+              />
+            </Spacing>
+          )} */}
+
+          {product.variants.length > 0 &&
+            options.map((option) => {
+              const unique = filterUnique(
+                option.values.map((opt) => ({
+                  label: opt.value,
+                  value: opt.id,
+                }))
+              );
+
+              return (
+                <Spacing key={option.id} bottom="m">
+                  <OptionLabel>{option.title}</OptionLabel>
+                  <Dropdown
+                    value={options[option.id]}
+                    onHandleChange={() => {
+                      setItemOptions({ option });
+                    }}
+                    options={unique}
+                    key={option.id}
+                  ></Dropdown>
+                </Spacing>
+              );
+            })}
           <OptionLabel>Amount:</OptionLabel>
           <Spacing bottom="m">
             <NumericInput onChange={setAmount} value={amount} />
