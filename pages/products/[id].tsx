@@ -43,8 +43,6 @@ export default function ProductPage({ product }: ProductPageProps) {
   const [itemOptions, setItemOptions] = useState({});
   const [amount, setAmount] = useState(0);
 
-  console.log(product, "product");
-
   const variantOptions = useMemo(() => {
     return variants.map(({ title, id }) => ({
       label: title,
@@ -85,7 +83,7 @@ export default function ProductPage({ product }: ProductPageProps) {
             </Spacing>
           )} */}
 
-          {product.variants.length > 0 &&
+          {variants.length > 0 &&
             options.map((option) => {
               const unique = filterUnique(
                 option.values.map((opt) => ({

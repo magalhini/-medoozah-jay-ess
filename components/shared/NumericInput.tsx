@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 type Props = {
+  id?: string;
   value: number;
   min?: number;
   max?: number;
@@ -10,8 +11,9 @@ type Props = {
 
 const UnstyledNumericInput = ({
   min = 0,
-  max = 100000,
+  max = 100000, // Potentially also given by the store configuration, if present?
   value,
+  id,
   className,
   onChange,
 }: Props) => {
@@ -21,6 +23,7 @@ const UnstyledNumericInput = ({
 
   return (
     <input
+      id={id}
       onChange={onHandleChange}
       className={className}
       value={value}
